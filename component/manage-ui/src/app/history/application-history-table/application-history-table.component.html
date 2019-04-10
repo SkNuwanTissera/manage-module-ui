@@ -62,7 +62,26 @@
             <span class="no-rec">No Records...</span>
         </div>
     </div>
-<!--    When user with Publisher role is Logged in, This will show Subscription details-->
+</div>
+
+<div class="table-wrapper">
+
+    <!--    When user with Publisher role is Logged in, This will show Subscription details-->
+
+    <div class="filter-container" [ngClass]="{'open':isSubFilterVisible}">
+        <div class="content animated fadeInUp delay-02" *ngIf="isSubFilterVisible">
+            <div class="head">Subscription Approval History Filter</div>
+            <div class="row">
+                <div class="form-group col-xs-8">
+                    <input type="text"
+                           [(ngModel)]="filterSubString"
+                           container="body"
+                           class="form-control" placeholder="Filter Subscription History">
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="table" *ngIf="subViewPermission">
         <div class="tbl-row header">
             <div class="tbl-cell">Subscription Id</div>
@@ -72,7 +91,7 @@
             <div class="tbl-cell">Subscription Status</div>
             <div class="tbl-cell">CreatedBy</div>
         </div>
-        <div class="tbl-row" *ngFor="let sub of subscriptionDataSource">
+        <div class="tbl-row" *ngFor="let sub of subscriptionDataSource | search:'subscription_id,tier_id,api_id,app_id,sub_status,subs_create_state,created_by':filterSubString ">
             <div class="tbl-cell">{{sub.subscription_id}}</div>
             <div class="tbl-cell">{{sub.tier_id}}</div>
             <div class="tbl-cell">{{sub.api_id}}</div>

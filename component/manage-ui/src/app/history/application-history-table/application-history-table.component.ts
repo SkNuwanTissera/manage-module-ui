@@ -8,6 +8,8 @@ import {
 import {Router} from '@angular/router';
 import {ReportingRemoteDataService} from "../../data-providers/reporting-remote-data.service";
 import {AuthenticationService} from "../../commons/services/authentication.service";
+import {Pipe, PipeTransform} from '@angular/core';
+
 
 @Component({
     selector: 'app-history-table',
@@ -25,11 +27,17 @@ export class ApplicationHistoryTableComponent implements OnInit {
     @Input()
     private filter: ApprovalHistoryFilter;
 
+    @Input()
+    private subsFilter: ApprovalHistoryFilter;
+
     @Output()
     private applicationDetail: ApplicationHistory;
 
     @Output()
     private onFilterChange: EventEmitter<ApprovalHistoryFilter> = new EventEmitter();
+
+    @Output()
+    private onSubsFilterChange: EventEmitter<ApprovalHistoryFilter> = new EventEmitter();
 
     private operatorApprovals: ApplicationHistory[];
     private subscriptions: ApplicationHistory[];
@@ -37,7 +45,9 @@ export class ApplicationHistoryTableComponent implements OnInit {
     private subscriptionDataSource : SubscriptionsHistory[];
 
     private isFilterVisible: boolean;
+    private isSubFilterVisible: boolean;
     private filterString: string;
+    private filterSubString: string;
     private showApprovedOn: string;
     public name:string;
     private loggedUser:any;
@@ -55,7 +65,9 @@ export class ApplicationHistoryTableComponent implements OnInit {
         this.operatorApprovals = [];
         this.subscriptions = [];
         this.isFilterVisible = true;
+        this.isSubFilterVisible = true;
         this.filterString = '';
+        this.filterSubString = '';
         this.showApprovedOn = 'workFlowHistory:showApprovedOn';
         this.name = 'test';
 
@@ -96,5 +108,18 @@ export class ApplicationHistoryTableComponent implements OnInit {
         this.filterString = '';
         this.filter.filterString = this.filterString;
         this.onFilterChange.emit(this.filter);
+    }
+
+}
+
+@Pipe({
+    name: 'search'
+})
+export class SearchPipe implements PipeTransform {
+    public transform(value, keys: string, term: string) {
+
+        if (!term) return value;
+        return (value || []).filter(item => keys.split(',').some(key => item.hasOwnProperty(key) && new RegExp(term, 'gi').test(item[key])));
+
     }
 }
