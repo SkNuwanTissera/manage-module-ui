@@ -10,6 +10,18 @@ export class ApprovalHistoryFilter {
     filterString: string;
 }
 
+export class SubscriptionHistoryFilter {
+    fromDate: string = '';
+    toDate: string = '';
+    subscriber: string = '';
+    api: string = '';
+    applicationId: number = 0;
+    operator: string = '';
+    offset: number = 0;
+    count: number = 10;
+    filterString: string;
+}
+
 export class ApprovalRateFilter {
     fromDate: string = '';
     toDate: string = '';
@@ -19,6 +31,18 @@ export class ApprovalRateFilter {
     operator: string = '';
     offset: number = 0;
     count: number = 10;
+}
+
+export class SubscriptionsHistory {
+    subscriptionId : number;
+    tierId: string;
+    apiId: number;
+    apiName: string;
+    appId: number;
+    appName: string;
+    subStatus: string;
+    subsCreateState: string;
+    createdBy: string;
 }
 
 export class ApprovalHistory {
@@ -91,16 +115,6 @@ export class Subscriptions {
     approvalStatus: string;
     operatorName: string;
     lastUpdated: string;
-}
-
-export class SubscriptionsHistory {
-    subscription_id : number;
-    tier_id: string;
-    api_id: number;
-    app_id: number;
-    sub_status: string;
-    subs_create_state: string;
-    created_by: string;
 }
 
 export class ApprovedApiOperationRate {

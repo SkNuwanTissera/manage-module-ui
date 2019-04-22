@@ -2,13 +2,12 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {
     AppHistory,
     ApplicationHistory,
-    ApprovalHistoryFilter,
+    ApprovalHistoryFilter, SubscriptionHistoryFilter,
     SubscriptionsHistory
 } from '../../commons/models/reporing-data-models';
 import {Router} from '@angular/router';
 import {ReportingRemoteDataService} from "../../data-providers/reporting-remote-data.service";
 import {AuthenticationService} from "../../commons/services/authentication.service";
-import {Pipe, PipeTransform} from '@angular/core';
 
 
 @Component({
@@ -24,11 +23,14 @@ export class ApplicationHistoryTableComponent implements OnInit {
     @Input()
     private dataSource: AppHistory[];
 
+    @Input
+    private subscriptionDataSource : SubscriptionsHistory[];
+
     @Input()
     private filter: ApprovalHistoryFilter;
 
     @Input()
-    private subsFilter: ApprovalHistoryFilter;
+    private subsFilter: SubscriptionHistoryFilter;
 
     @Output()
     private applicationDetail: ApplicationHistory;
@@ -37,12 +39,11 @@ export class ApplicationHistoryTableComponent implements OnInit {
     private onFilterChange: EventEmitter<ApprovalHistoryFilter> = new EventEmitter();
 
     @Output()
-    private onSubsFilterChange: EventEmitter<ApprovalHistoryFilter> = new EventEmitter();
+    private onSubsFilterChange: EventEmitter<SubscriptionHistoryFilter> = new EventEmitter();
 
     private operatorApprovals: ApplicationHistory[];
     private subscriptions: ApplicationHistory[];
     private depType : string = "internal_gateway_type2";
-    private subscriptionDataSource : SubscriptionsHistory[];
 
     private isFilterVisible: boolean;
     private isSubFilterVisible: boolean;
@@ -77,15 +78,12 @@ export class ApplicationHistoryTableComponent implements OnInit {
             console.log(err);
         });
 
-        this.reportingService.getSubscriptionHistory().then((result)=>{
-            this.subscriptionDataSource = result;
-            console.log(this.subscriptionDataSource);
-        }).catch((err)=> {
-            console.log(err);
-        });
-
-        // this.loggedUser = this.authService.loginUserInfo.getValue();
-        // this.subViewPermission = this.loggedUser.permissions.subscription.visible;
+        // this.reportingService.getSubscriptionHistory().then((result)=>{
+        //     this.subscriptionDataSource = result;
+        //     console.log(this.subscriptionDataSource);
+        // }).catch((err)=> {
+        //     console.log(err);
+        // });
 
         if (this.authService.hasPermissions('subscription:visible')){
             console.log(this.authService.hasPermissions('subscription:visible'));
@@ -110,16 +108,15 @@ export class ApplicationHistoryTableComponent implements OnInit {
         this.onFilterChange.emit(this.filter);
     }
 
-}
+    onSubFilterItemAdded() {
+        let stringV = this.filterSubString.replace(/\s/g, '');
+        this.subsFilter.filterString = stringV;
+        this.onSubsFilterChange.emit(this.subsFilter);
+    }
 
-@Pipe({
-    name: 'search'
-})
-export class SearchPipe implements PipeTransform {
-    public transform(value, keys: string, term: string) {
-
-        if (!term) return value;
-        return (value || []).filter(item => keys.split(',').some(key => item.hasOwnProperty(key) && new RegExp(term, 'gi').test(item[key])));
-
+    onSubsClear() {
+        this.filterSubString = '';
+        this.subsFilter.filterString = this.filterString;
+        this.onSubsFilterChange.emit(this.subsFilter);
     }
 }

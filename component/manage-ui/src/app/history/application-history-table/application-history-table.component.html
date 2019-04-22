@@ -70,34 +70,58 @@
 
     <div class="filter-container" [ngClass]="{'open':isSubFilterVisible}">
         <div class="content animated fadeInUp delay-02" *ngIf="isSubFilterVisible">
-            <div class="head">Subscription Approval History Filter</div>
+            <div class="head">Subscription History Filter<span class="clear" (click)="onSubsClear()">Clear All</span></div>
             <div class="row">
                 <div class="form-group col-xs-8">
                     <input type="text"
                            [(ngModel)]="filterSubString"
                            container="body"
-                           class="form-control" placeholder="Filter Subscription History">
+                           class="form-control" placeholder="Filter Subscription Approval History">
+                </div>
+                <div class="form-group col-xs-4">
+                    <button (click)="onSubFilterItemAdded()" class="btn btn-primary">Search</button>
+                    &nbsp;
+                    <span
+                            class="glyphicon glyphicon-info-sign info-tooltip info-tooltip-view"
+                            [tooltip]="SubsFilterHelper" placement="right"
+                    ></span>
+
                 </div>
             </div>
         </div>
     </div>
+
+    <template #SubsFilterHelper>
+        <table style="width:100%;text-align: left; padding: 20px;">
+            <tr>
+                <td>Subscription Approval Filter Example</td>
+            </tr>
+            <tr>
+                <td>subId:id,createdBy:name</td>
+            </tr>
+        </table>
+    </template>
 
     <div class="table" *ngIf="subViewPermission">
         <div class="tbl-row header">
             <div class="tbl-cell">Subscription Id</div>
             <div class="tbl-cell">Tier Id</div>
             <div class="tbl-cell">Api Id</div>
+            <div class="tbl-cell">Api Name</div>
             <div class="tbl-cell">Application Id</div>
+            <div class="tbl-cell">Application Name</div>
             <div class="tbl-cell">Subscription Status</div>
             <div class="tbl-cell">CreatedBy</div>
         </div>
-        <div class="tbl-row" *ngFor="let sub of subscriptionDataSource | search:'subscription_id,tier_id,api_id,app_id,sub_status,subs_create_state,created_by':filterSubString ">
-            <div class="tbl-cell">{{sub.subscription_id}}</div>
-            <div class="tbl-cell">{{sub.tier_id}}</div>
-            <div class="tbl-cell">{{sub.api_id}}</div>
-            <div class="tbl-cell">{{sub.app_id}}</div>
-            <div class="tbl-cell">{{sub.sub_status}}</div>
-            <div class="tbl-cell">{{sub.created_by}}</div>
+        <div class="tbl-row" *ngFor="let sub of ......................................................................................................">
+            <div class="tbl-cell">{{sub.subscriptionId}}</div>
+            <div class="tbl-cell">{{sub.tierId}}</div>
+            <div class="tbl-cell">{{sub.apiId}}</div>
+            <div class="tbl-cell">{{sub.apiName}}</div>
+            <div class="tbl-cell">{{sub.appId}}</div>
+            <div class="tbl-cell">{{sub.appName}}</div>
+            <div class="tbl-cell">{{sub.subStatus}}</div>
+            <div class="tbl-cell">{{sub.createdBy}}</div>
         </div>
     </div>
 </div>
